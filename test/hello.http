@@ -1,0 +1,9 @@
+# hello world 接口测试
+http://localhost:3000/api/v1
+
+###
+
+# Get Path接口测试
+http://localhost:3000/api/v1/lv
+
+###
