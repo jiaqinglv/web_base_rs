@@ -1,8 +1,8 @@
 use axum::{Router, routing::get};
 
-use crate::app::hello;
+use crate::app::api::hello;
 
-pub fn new_http() -> axum::Router {
+pub fn new_router() -> axum::Router {
     // hello 路由
     let router = Router::new();
     // 版本控制
