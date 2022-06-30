@@ -1,14 +1,17 @@
-use std::{error::Error };
+use std::error::Error;
 
 
 mod routers;
 mod app;
 mod model;
 mod config;
+mod lib;
+
+use lib::app as apps;
 
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    app::new_axum_server("./config/default.json").await?;
+    apps::new_axum_server("./config/default.json").await?;
     Result::Ok(())
 }
