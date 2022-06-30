@@ -13,7 +13,7 @@ web_base_rs
 ├─middleware 中间件\
 ├─model 模型层\
 │ ├── entity entity实体\
-│ └──── schema schema 定义请求与返回数据结构\
+│ └── schema schema 定义请求与返回数据结构\
 ├─public 静态资源\
 ├─router 路由层\
 ├─schedule 定时任务\
