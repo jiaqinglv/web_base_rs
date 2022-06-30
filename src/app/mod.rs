@@ -33,7 +33,7 @@ pub struct Config {
 /// 配置信息
 impl Config{
     pub async fn load_default_config(mut self,app: &mut App) -> Result<(), Box<dyn Error>> {
-         let conifg_path = match self.source {
+        let conifg_path = match self.source {
             ConfigType::JSON(path) => path,
             ConfigType::TOML(path) => path,
         };
@@ -45,8 +45,14 @@ impl Config{
                 std::process::exit(2);
             }
         };
-        let config= serde_json::from_str(config_file_data.as_str())?;
-        self.data = config;
+        let config= serde_json::from_str(config_file_data.as_str());
+        self.data = match config {
+            Ok(config) => config,
+            Err(err) => {
+                error!("configer load error:{}", err);
+                ServerConfig::default()
+            },
+        };
         app.conf.insert("default".to_string(), self.data);
         Ok(())
     }
@@ -94,18 +100,22 @@ pub async fn new_axum_server(default_config_path: &str) -> Result<(), Box<dyn Er
         server: Box::new(()),
         conf: HashMap::new(),
     };
+
+    // 日志初始化
+    app.init_log(Level::DEBUG);
+
+    // 默认初始配置
+    let default_conf = &ServerConfig::default();
     // 配置文件初始化
     let config_type = ConfigType::JSON(default_config_path.to_string());
     app.init_config(config_type).await?;
 
-    let conf = app.conf.get(&"default".to_string()).unwrap();
+    let conf = app.conf.get(&"default".to_string()).unwrap_or(default_conf);
     let port = conf.port;
     let host = conf.host.as_str();
     //配置信息读取
     let addr:SocketAddr = (host.to_string()+ ":" + &port.to_string()).parse()?;
 
-    // 日志初始化
-    app.init_log(Level::DEBUG);
     // 初始化 axum http服务器
     app.new_axum_http_server(addr).await?;
 
