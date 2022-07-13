@@ -1,4 +1,16 @@
 {
     "host": "127.0.0.1",
-    "port": 5433
+    "port": 5433,
+    "pg": {
+        "max_size": 30,
+        "min_size": 10,
+        "idle_timeout": 100,
+        "connect_str": "postgresql://postgres:admin@localhost:5432/book?sslmode=Disable"
+    },
+    "redis": {
+        "max_size": 30,
+        "min_size": 10,
+        "idle_timeout": 100,
+        "connect_str": "redis://default:admin@localhost:6379/0"
+    }
 }
