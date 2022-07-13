@@ -6,10 +6,13 @@ use tracing_subscriber::util::SubscriberInitExt;
 
 use crate::{routers, config::ServerConfig};
 
+use super::db::{DBPool, self};
+
 /// 服务器应用
 pub struct App {
     pub server: Box<dyn Any>,
     pub conf: HashMap<String, ServerConfig>,
+    pub data: Option<DBPool>, 
 }
 
 /// 配置文件类型
@@ -97,6 +100,7 @@ pub async fn new_axum_server(default_config_path: &str) -> Result<(), Box<dyn Er
     let mut app = App{
         server: Box::new(()),
         conf: HashMap::new(),
+        data: None,
     };
 
     // 日志初始化
@@ -113,6 +117,9 @@ pub async fn new_axum_server(default_config_path: &str) -> Result<(), Box<dyn Er
     let host = conf.host.as_str();
     //配置信息读取
     let addr:SocketAddr = (host.to_string()+ ":" + &port.to_string()).parse()?;
+
+    // 数据库设置
+    app.data = Some(db::new_dbpool(conf).await?);
 
     // 初始化 axum http服务器
     app.new_axum_http_server(addr).await?;

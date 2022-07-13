@@ -16,3 +16,9 @@ tracing = "0.1"
 tracing-subscriber = { version="0.3", features = ["env-filter"] }
 tower-http = { version = "0.2.0", features = ["fs", "trace"] }
 tower-service = "0.3.1"
+
+# 数据库
+sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "postgres", "mysql" ] }
+# redis 数据库
+redis = { version = "0.21", features = ["tokio-comp"] }
+deadpool-redis = { version = "0.10.2", features = ["serde"] }
